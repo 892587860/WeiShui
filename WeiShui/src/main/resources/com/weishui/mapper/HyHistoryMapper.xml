@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weishui.mapper.HyHistoryMapper" >
+  <resultMap id="HyHistory" type="com.weishui.model.HyHistory" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="code_way" property="codeWay" jdbcType="VARCHAR" />
+    <result column="tran_mode" property="tranMode" jdbcType="VARCHAR" />
+    <result column="frame_start_symbol" property="frameStartSymbol" jdbcType="VARCHAR" />
+    <result column="center_station" property="centerStation" jdbcType="VARCHAR" />
+    <result column="telemetry_station" property="telemetryStation" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="function_code" property="functionCode" jdbcType="VARCHAR" />
+    <result column="identity_length" property="identityLength" jdbcType="VARCHAR" />
+    <result column="message_start_symbol" property="messageStartSymbol" jdbcType="VARCHAR" />
+    <result column="packages" property="packages" jdbcType="VARCHAR" />
+    <result column="serial_number" property="serialNumber" jdbcType="VARCHAR" />
+    <result column="messsage_serialnumber" property="messsageSerialnumber" jdbcType="VARCHAR" />
+    <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
+    <result column="F1F1" property="f1f1" jdbcType="VARCHAR" />
+    <result column="station_type" property="stationType" jdbcType="VARCHAR" />
+    <result column="F0F0" property="f0f0" jdbcType="VARCHAR" />
+    <result column="time_length_symbol" property="timeLengthSymbol" jdbcType="VARCHAR" />
+    <result column="d_0E" property="d0e" jdbcType="VARCHAR" />
+    <result column="d_03" property="d03" jdbcType="VARCHAR" />
+    <result column="d_27" property="d27" jdbcType="VARCHAR" />
+    <result column="d_38" property="d38" jdbcType="VARCHAR" />
+    <result column="message_end_symbol" property="messageEndSymbol" jdbcType="VARCHAR" />
+    <result column="check_code" property="checkCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="HyHistory_Column_List" >
+    id, code_way, tran_mode, 
+      frame_start_symbol, center_station, telemetry_station, 
+      password, function_code, identity_length, 
+      message_start_symbol, packages, serial_number, 
+      messsage_serialnumber, <!-- DATE_FORMAT(send_time,'%Y-%m-%d %h:%i:%s') as --> send_time, F1F1, 
+      station_type, F0F0, time_length_symbol, 
+      d_0E, d_03, d_27, d_38, 
+      message_end_symbol, check_code
+  </sql>
+  <select id="findAll" resultMap="HyHistory">
+  	SELECT * FROM hy_history 
+  </select>
+  <!-- 分页SQL语句 -->  
+	<select id="selectHistoryByPage" resultMap="HyHistory" parameterType="String">  
+	  select   
+	  <include refid="HyHistory_Column_List" />
+	  from hy_history
+	  <where>
+		  <if test="search != null and search != ''" >
+	        and telemetry_station = #{search}
+	      </if>
+	  </where>
+	  order by send_Time desc
+	   limit #{start},#{length}   
+	</select>  
+	<!-- 取得记录的总数 -->  
+	<select id="getHistoryCount" resultType="long" parameterType="String">  
+	  SELECT COUNT(*) FROM hy_history
+	  <where>
+		  <if test="search != null and search != ''" >
+	        and telemetry_station like #{search}
+	      </if>  
+	  </where>
+	</select>
+	<!-- 查询某个遥测站某个月的每天的蓄水口瞬时流量，当天流量和 -->
+	<select id="getTrafficMonth" resultType="java.util.HashMap" parameterType="String">  
+	  SELECT date_format(s.send_time, '%Y-%m-%d %h:%i:%s') as sendTime, s.d_27 as traffic
+	  FROM hy_history s 
+	  <where>
+		  <if test="sendTime != null and sendTime != ''" >
+	        and date_format(s.send_time, '%Y-%m')=#{sendTime}
+	      </if>
+		  <if test="station != null and station != ''" >
+	       and s.telemetry_station=#{station}
+	      </if>  
+	  </where>
+	<!--   GROUP BY date_format(s.send_time, '%Y-%m-%d') -->
+      ORDER BY 1
+	</select>
+	<!-- 查询某个遥测站某个月的每天的电源电压，当天的和 -->
+	<select id="getVoltageMonth" resultType="java.util.HashMap" parameterType="String">  
+	  SELECT date_format(s.send_time, '%Y-%m-%d %h:%i:%s') as sendTime, s.d_38 as voltage
+	  FROM hy_history s 
+	  <where>
+		  <if test="sendTime != null and sendTime != ''" >
+	        and date_format(s.send_time, '%Y-%m')=#{sendTime}
+	      </if>
+		  <if test="station != null and station != ''" >
+	       and s.telemetry_station=#{station}
+	      </if>  
+	  </where>
+	 <!--  GROUP BY date_format(s.send_time, '%Y-%m-%d') -->
+      ORDER BY 1
+	</select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	
+	<!-- <properties resource="init.properties"/> -->
+	
+	<!-- 指定数据库连接驱动地址 -->
+	<!-- <classPathEntry
+		location="${classpath}" /> -->
+	<classPathEntry
+		location="D:/MavenRepository/maven_jar/mysql/mysql-connector-Java/5.1.30/mysql-connector-Java-5.1.30.jar" />
+	<!-- 一个数据库一个 context -->
+	<context id="context2">
+	
+		<commentGenerator>
+			<!-- 是否取消注释 -->
+			<property name="suppressAllComments" value="true"></property>
+			<!-- 是否生成注释代时间戳-->
+			<property name="suppressDate" value="true"></property>
+		</commentGenerator>
+		<!-- jdbc连接配置 -->
+	<!-- 	<jdbcConnection
+			connectionURL="${url}"
+			driverClass="${driver}" password="${username}" userId="${password}" /> -->
+		<jdbcConnection
+			connectionURL="jdbc:mysql://localhost:3306/weishui?useUnicode=true&amp;characterEncoding=UTF-8"
+			driverClass="com.mysql.jdbc.Driver" userId="root" password="root" />
+			
+		<!-- 类型转换 -->  
+        <javaTypeResolver>  
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->  
+            <property name="forceBigDecimals" value="false"/>  
+        </javaTypeResolver>  
+		
+		<!-- 生成实体类的地址 -->
+		<javaModelGenerator targetPackage="com.weishui.model"
+			targetProject="D:\workspace\ScenicArea\src\main\java" />
+			
+		<!-- 生成mapper.xml文件 -->
+		<sqlMapGenerator targetPackage="com.weishui.mapper"
+			targetProject="D:\workspace\ScenicArea\src\main\resources" />
+		
+		<!-- 生成mapxml对应的client 也就是接口dao -->
+		<javaClientGenerator targetPackage="com.weishui.mapper"
+			targetProject="D:\workspace\ScenicArea\src\main\java" type="XMLMAPPER" />
+			
+		<table schema="weishui" tableName="wx_user"  domainObjectName="WxUser" enableCountByExample="false"  
+            enableDeleteByExample="false" enableSelectByExample="false"  
+            enableUpdateByExample="false">
+            <!-- domainObjectName  指定生成的类的名字 -->
+		</table>
+	</context>
+</generatorConfiguration>
