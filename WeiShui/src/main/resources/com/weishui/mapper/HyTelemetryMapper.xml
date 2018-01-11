@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weishui.mapper.HyTelemetryMapper" >
+  <resultMap id="HyTelemetry" type="com.weishui.model.HyTelemetry" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result column="station" property="station" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="HyTelemetry_Column_List" >
+    id, lng, lat, station
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="HyTelemetry" parameterType="java.lang.String" >
+    select 
+    <include refid="HyTelemetry_Column_List" />
+    from hy_telemetry
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hy_telemetry
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.weishui.model.HyTelemetry" >
+    insert into hy_telemetry (id, lng, lat, 
+      station)
+    values (#{id,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, #{lat,jdbcType=VARCHAR}, 
+      #{station,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.weishui.model.HyTelemetry" >
+    insert into hy_telemetry
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+      <if test="station != null" >
+        station,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="station != null" >
+        #{station,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.weishui.model.HyTelemetry" >
+    update hy_telemetry
+    <set >
+      <if test="lng != null" >
+        lng = #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        lat = #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="station != null" >
+        station = #{station,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.weishui.model.HyTelemetry" >
+    update hy_telemetry
+    set lng = #{lng,jdbcType=VARCHAR},
+      lat = #{lat,jdbcType=VARCHAR},
+      station = #{station,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectRemotePackets" resultType="java.util.HashMap"  >
+    SELECT t.id,t.lat,t.lng,t.station,date_format(n.send_time, '%y-%m-%d %h:%i:%s') as sendTime, n.d_27 as traffic,n.d_38 as voltage
+	FROM HY_TELEMETRY T
+	LEFT JOIN HY_NEW N ON T.ID=N.CENTER_STATION
+  </select>
+</mapper>

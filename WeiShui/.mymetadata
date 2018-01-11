@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="ScenicArea"
+  id="myeclipse.1509950337044"
+  context-root="/ScenicArea"
+  j2ee-spec="6.0"
+  archive="ScenicArea.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
